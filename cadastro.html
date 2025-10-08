@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário</title>
+</head>
+<body>
+    <div class="container-body">
+        <h2>Cadastro de Produtos</h2>
+    </div>
+    <form action="#" method="post">
+        <label for="nome">Nome do Produto</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <!--<label for="descricao">Descrição</label>
+        <textarea name="descricao" id="descricao" cols="" rows="4"></textarea>-->
+
+        <label for="preco">Preço R$:</label>
+        <input type="number" id="preco" name="preco" step="0.01" required>
+
+        <label for="categoria">Categoria</label>
+        <select name="categoria" id="categoria" required>
+            <option value="">Selecione...</option>
+            <option value="item1">Item 01</option>
+            <option value="item2">Item 02</option>
+            <option value="item3">Item 03</option>
+        </select>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+
+    
+</body>
+</html>

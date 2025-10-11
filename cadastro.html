@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container-body">
@@ -15,20 +16,28 @@
 
         <!--<label for="descricao">Descrição</label>
         <textarea name="descricao" id="descricao" cols="" rows="4"></textarea>-->
-
+        
         <label for="preco">Preço R$:</label>
         <input type="number" id="preco" name="preco" step="0.01" required>
+
+        <label for="quantidade">Quantidade</label>
+        <input type="number" id="quantidade" name="quantidade" min="0" required>
+        
+        <label for="fornecedor">Fornecedor</label>
+        <input type="text" id="fornecedor" name="fornecedor" placeholder="Nome do Fornecedor">
 
         <label for="categoria">Categoria</label>
         <select name="categoria" id="categoria" required>
             <option value="">Selecione...</option>
-            <option value="item1">Item 01</option>
-            <option value="item2">Item 02</option>
-            <option value="item3">Item 03</option>
-            <option value="item3">Item 04</option>
+            <option value="item1">Água</option>
+            <option value="item2">Acessóario</option>
+            <option value="item3">Item 03</option>            
         </select>
 
-        <button type="submit">Cadastrar</button>
+        <div class="botoes">
+            <button type="button" id="btn-cancelar">Cancelar</button>
+            <button type="submit">Cadastrar</button>
+        </div>
     </form>
 
 

@@ -1,0 +1,114 @@
+/*Resetar a margin e o padding. Escolher uma fonte padrão para o site*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/*Trabalhando o Body*/
+body {
+    background: linear-gradient(to bottom, #b3e5fc, #e1f5fe);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh; /*Deixa o background completo*/
+}
+
+.container-body {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.container-body h2 {
+    color: #0277bd;
+    font-size: 1.8em; /*Melhor adaptável para acessibilidade*/
+}
+
+form {
+    background: #ffffff;
+    padding: 30px 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    color: #01579b;
+    margin-bottom: 5px;
+}
+
+/*Input*/
+input, select /*textarea*/ {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #90caf9;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.2s ease; /*O que é isso???*/
+    resize: none;
+}
+
+input:focus, select:focus /*, textarea:focus*/ {
+    border-color: #0288d1;
+    outline: none;
+    box-shadow: 0 0 4px #0288d1;
+}
+
+/*Área dos Botões*/
+.botoes {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/*Configurando os Botões*/
+button {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /*Animar o botão ao passar o mouse*/
+}
+
+button[type="submit"] {
+    background-color: #0288d1;
+    color: white;
+}
+
+button[type="submit"]:hover {
+    background-color: #0277bd;
+}
+
+button[type="button"] {
+    background-color: #e57373;
+    color: white;
+}
+
+button[type="button"]:hover {
+    background-color: #d32f2f;
+}
+
+@media (max-widht: 480px) {
+    form {
+        padding: 20px;
+    }
+    
+    .container-body h2 {
+        font-size: 1.5em;
+    }
+}
+
+
+
+
+
+
+

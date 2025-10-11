@@ -14,6 +14,8 @@ body {
     align-items: center;
     flex-direction: column;
     height: 100vh; /*Deixa o background completo*/
+    padding: 20px; /*Não deixa encostar na tela ao encolher a janela do navegdor*/
+    box-sizing: border-box; /*Para o padding não causar rolagem*/
 }
 
 .container-body {
@@ -60,6 +62,23 @@ input:focus, select:focus /*, textarea:focus*/ {
     box-shadow: 0 0 4px #0288d1;
 }
 
+/*Remove as setas do number nos navegadores
+baseados em Chromium (Chrome, Edge, Opera, Safari)*/
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/*Remove as setas do number no Firefox.
+Observação: é uma propriedade não padronizada. Serve
+apenas no Firefox.*/
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+
+
 /*Área dos Botões*/
 .botoes {
     display: flex;
@@ -96,6 +115,26 @@ button[type="button"]:hover {
     background-color: #d32f2f;
 }
 
+/*Link para o Botão Cancelar*/
+a.btn-cancelar {
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    background-color: #e57373;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex: 1; /*Manté o mesmo tamanho do outro botão*/
+}
+
+a.btn-cancelar:hover {
+    background-color: #d32f2f;
+}
+
+/*Configurando a responsividade*/
 @media (max-widht: 480px) {
     form {
         padding: 20px;

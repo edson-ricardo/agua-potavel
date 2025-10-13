@@ -77,8 +77,6 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
-
-
 /*Área dos Botões*/
 .botoes {
     display: flex;
@@ -106,17 +104,20 @@ button[type="submit"]:hover {
     background-color: #0277bd;
 }
 
+/*Botão Canelar quando for button*/
 button[type="button"] {
     background-color: #e57373;
     color: white;
 }
 
+/*Botão Canelar quando for button*/
 button[type="button"]:hover {
     background-color: #d32f2f;
 }
 
+/*Botão Canelar quando for um link*/
 /*Link para o Botão Cancelar*/
-a.btn-cancelar {
+a.botao-cancelar {
     display: inline-block;
     text-align: center;
     text-decoration: none;
@@ -127,12 +128,14 @@ a.btn-cancelar {
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    flex: 1; /*Manté o mesmo tamanho do outro botão*/
+    flex: 1; /*Mantém o mesmo tamanho do outro botão*/
 }
 
-a.btn-cancelar:hover {
+/*Botão Canelar quando for um link*/
+a.botao-cancelar:hover {
     background-color: #d32f2f;
 }
+
 
 /*Configurando a responsividade*/
 @media (max-widht: 480px) {
@@ -144,6 +147,7 @@ a.btn-cancelar:hover {
         font-size: 1.5em;
     }
 }
+
 
 
 

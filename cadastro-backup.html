@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./img/form-32.png">
+</head>
+<body>
+<!---->
+    
+    <main>
+        <div class="container-body">
+            <h2>Cadastro de Produtos</h2>
+        </div>
+        <form action="#" method="post" id="formulario-produto">
+            <label for="nome">Nome do Produto*</label>
+            <input type="text" id="nome" name="nome" required>
+                        
+            <label for="preco">Preço R$:*</label>
+            <input type="number" id="preco" name="preco" step="0.01" required>
+
+            <label for="quantidade">Quantidade*</label>
+            <input type="number" id="quantidade" name="quantidade" min="0" required>
+            
+            <label for="fornecedor">Fornecedor*</label>
+            <input type="text" id="fornecedor" name="fornecedor" placeholder="Nome do Fornecedor" required>
+
+            <label for="descricao">Descrição</label>
+            <textarea name="descricao" id="descricao" cols="" rows="4"></textarea>
+
+            <label for="categoria">Categoria*</label>
+            <select name="categoria" id="categoria" required>
+                <option value="">Selecione...</option>
+                <option value="Água 20l">Água 20l</option>
+                <option value="Água 1l">Água 1l</option>
+                <option value="Acessório">Acessório</option>            
+            </select>            
+
+            <div class="botoes">
+                <button type="button" id="botao-cancelar">Cancelar</button>
+                <!--<a href="index.html" class="btn-cancelar">Cancelar</a>-->
+                <button type="submit">Cadastrar</button>            
+            </div>
+
+            <div class="btn-mostrar-produtos">
+                <button type="button" id="mostrar-produtos" class="mostrar">Mostrar Produtos</button>
+            </div>
+
+        </form>
+
+        <!-- Popup para listar os produtos -->
+        <div id="popup" class="popup">
+            <div class="popup-conteudo">
+                <span id="fechar-popup" class="fechar-popup">&times;</span> <!--Botão X-->
+                <h3>Produtos Cadastrados</h3>
+                <div id="listar-produtos"></div>
+            </div>
+        </div>
+
+        <div id="popup-editar" class="popup">
+            <div class="popup-conteudo">
+                <h3>Editar Produtos</h3>
+                <form action="" id="editar-formulario">
+                    <label for="">Nome:</label>
+                    <input type="text" id="editar-nome" required><br>
+                    <label for="">Preço:</label>
+                    <input type="text" id="editar-preco" required><br>
+                    <label for="">Quantidade;</label>
+                    <input type="text" id="editar-quantidade" required><br>
+                    <label for="">Fornecedor:</label>
+                    <input type="text" id="editar-fornecedor"><br>
+                    <label for="">Categoria:</label>
+                    <input type="text" id="editar-categoria"><br>
+                    <label for="">Descrição:</label>
+                    <input type="text" id="editar-descricao">
+
+                    <div class="btn-editar">
+                        <button type="submit" class="btn-salvar">Salvar</button>
+                        <button type="button" class="btn-cancelar" id="cancelar-edicao">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- -------------------------------------------------------------- -->
+        <!-- ------------------------- JavaScript ------------------------- -->
+        <!-- -------------------------------------------------------------- -->
+        
+
+        <!--Verificar se o usuário está logado-->
+        <script>
+            const usuarioLogado = localStorage.getItem("usuarioLogado");
+
+            if (!usuarioLogado) {
+                alert("Você precisa estar logado para entrar nesta página!");
+                window.location.href = "index.html";
+
+            }
+        </script>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const formulario = document.getElementById('formulario-produto');
+                const botaoCancelar = document.getElementById('botao-cancelar');
+                const botaoMostrar = document.getElementById('mostrar-produtos');
+                const popup = document.getElementById('popup');
+                const fechar = document.getElementById('fechar-popup');
+                const lista = document.getElementById('listar-produtos');
+            
+
+            // Função para salvar os produtos
+            formulario.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const nome = document.getElementById('nome').value.trim();
+                const preco = document.getElementById('preco').value.trim();
+                const quantidade = document.getElementById('quantidade').value.trim();
+                const fornecedor = document.getElementById('fornecedor').value.trim();
+                const categoria = document.getElementById('categoria').value.trim();
+                const descricao = document.getElementById('descricao').value.trim();
+
+                if (!nome || !preco || !quantidade || !fornecedor || categoria === "") {
+                    alert("Por favor, preencha todos os campos obrigatórios!");
+                    return;
+                }
+
+                const novoProduto = {nome, preco, quantidade, fornecedor, categoria, descricao};
+
+                const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+                //modificou para ...(novoProduto)
+                //produtos.push(produto);
+                produtos.push(novoProduto);
+                localStorage.setItem("produtos", JSON.stringify(produtos));
+
+                formulario.reset();
+                alert("Produto cadastrado com sucesso!");
+            });
+
+
+            // CANCELAR O PREENCHIMENTO DO FORMULÁRIO E SAIR DA PÁGINA
+            botaoCancelar.addEventListener('click', function() {
+                if (confirm("Deseja realmente sair do formulário?")) {
+                    formulario.reset();
+                    window.location.href = "index.html";
+                }
+            });
+
+
+            // FUNÇÃO QUE VAI MOSTRAR OS PRODUTOS CADATRADOS POR MEIO DO POPUP
+            botaoMostrar.addEventListener('click', function() {
+                exibirProdutos();
+                popup.style.display = "flex";
+            });
+            
+            
+            // FUNÇÃO QUE VAI MOSTRAR OS PRODUTOS POR MEIO DA FUNÇÃO 'exibirProdutos()'
+            function exibirProdutos () {            
+                const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+
+                if (produtos.length === 0) {
+                    lista.innerHTML = "<p>Nenhum produto cadastrado.</p>";
+                } else {
+                    // Cria uma tabela simples
+                    let tabela = `
+                    <table border="1" cellpadding="8" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>                            
+                                <th>Preço</th>
+                                <th>Quantidade</th>
+                                <th>Fornecedor</th>
+                                <th>Categoria</th>
+                                <th>Descrição</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    `;
+                                
+                    produtos.forEach((produto, index) => {
+                        tabela += `
+                            <tr>
+                                <td>${produto.nome}</td>
+                                <td>${produto.preco}</td>
+                                <td>${produto.quantidade}</td>
+                                <td>${produto.fornecedor}</td>
+                                <td>${produto.categoria}</td>
+                                <td>${produto.descricao}</td>
+                                <td><button class="btn-excluir" data-index="${index}">Excluir</button></td>
+                            </tr>
+                        `;
+                    });
+
+                    tabela += `</tbody></table>`;
+                    lista.innerHTML = tabela;
+
+                    // TODO - ADICIONAR OS EVENTOS PARA O BOTÃO EXCLUIR
+                    document.querySelectorAll(".btn-excluir").forEach(botao => {
+                        botao.addEventListener('click', function() {
+                            const i = this.getAttribute("data-index");
+                            excluirProduto(i);
+                        });
+                    });
+                }
+            }
+
+            // FUNÇÃO PARA EXCLUIR OS PRODUTOS CADASTRADOS
+            function excluirProduto(index) {
+                const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+                if (confirm("Deseja realmente excluir este produto?")) {
+                    produtos.splice(index, 1);
+                    localStorage.setItem("produtos", JSON.stringify(produtos));
+                    //Vai atualizar após a exclusão do item e depois exibi-la
+                    exibirProdutos();
+                }
+            }
+
+
+            // FECHAR O POPUP
+            fechar.addEventListener('click', function() {
+                popup.style.display = "none";
+
+            });
+            
+            // VAI FECHAR O POPUP MESMO SE CLICAR FORA DELE
+            window.addEventListener('click', function(e) {
+                if (e.target === popup) {
+                    popup.style.display = "none";
+                }            
+            });
+
+            });
+
+
+        </script>
+
+
+
+
+
+
+
+    </main>
+</body>
+</html>

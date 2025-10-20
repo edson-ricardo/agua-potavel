@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/style-Cadastro.css">
     <link rel="icon" href="./img/form-32.png">
 </head>
 <body>
-<!---->
+<!--Site para olhar produtos: https://www.lojamor.com.br/botijao-ice-20l-8097-padrao/p-->
     
     <main>
         <div class="container-body">
@@ -39,9 +39,9 @@
             </select>            
 
             <div class="botoes">
-                <button type="button" id="botao-cancelar">Cancelar</button>
+                <button type="button" id="botao-cancelar" class="botao-cancelar">Sair</button>
                 <!--<a href="index.html" class="btn-cancelar">Cancelar</a>-->
-                <button type="submit">Cadastrar</button>            
+                <button type="submit" class="botao-cadastrar">Cadastrar</button>            
             </div>
 
             <div class="btn-mostrar-produtos">
@@ -53,9 +53,40 @@
         <!-- Popup para listar os produtos -->
         <div id="popup" class="popup">
             <div class="popup-conteudo">
-                <span id="fechar-popup" class="fechar-popup">&times;</span>
+                <button id="fechar-popup" class="fechar-popup">&times;</button> <!--Botão X-->
                 <h3>Produtos Cadastrados</h3>
                 <div id="listar-produtos"></div>
+            </div>
+        </div>
+
+        <div id="popup-editar" class="editar-popup">
+            <div class="popup-conteudo-editar">
+                <button id="fechar-editar" class="fechar-popup">&times;</button>
+                <h3>Editar Produtos</h3>
+                <form action="" id="editar-formulario">
+                    <label for="">Nome:</label>
+                    <input type="text" id="editar-nome" required><br>
+                    <label for="">Preço:</label>
+                    <input type="number" id="editar-preco" required><br>
+                    <label for="">Quantidade;</label>
+                    <input type="number" id="editar-quantidade" required><br>
+                    <label for="">Fornecedor:</label>
+                    <input type="text" id="editar-fornecedor" equired><br>
+                    <label for="">Categoria:</label>
+                    <input type="text" id="editar-categoria" equired><br>
+                    <label for="">Descrição:</label>
+                    <input type="text" id="editar-descricao">
+
+                    <div class="btn-editar-produto">                        
+                        <div>
+                            <button type="submit" class="btn-salvar-editar">Salvar</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn-cancelar-editar" id="cancelar-edicao">Cancelar</button>
+                        </div>                        
+
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -75,52 +106,53 @@
             }
         </script>
         
-        <!--JavaScript para limpar formulario e depois sair para o index
-        <script>
-            
-            document.getElementById('botao-cancelar').addEventListener('click', function() {
-                const confirmar = confirm('Deseja realmente sair do formulário?');
-                if(confirmar) {
-                    document.getElementById('formulario-produto').reset(); //Código para limpar o formulário
-                    window.location.href = 'index.html'; //Código para redirecionar para a página inicial
-                }
-            });
-
-        </script>-->
-        
-
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 const formulario = document.getElementById('formulario-produto');
                 const botaoCancelar = document.getElementById('botao-cancelar');
                 const botaoMostrar = document.getElementById('mostrar-produtos');
                 const popup = document.getElementById('popup');
+                const popupEditar = document.getElementById('popup-editar');
                 const fechar = document.getElementById('fechar-popup');
+                const fecharEditar = document.getElementById('fechar-editar');
                 const lista = document.getElementById('listar-produtos');
-            
+                const editarFormulario = document.getElementById('editar-formulario');
+                const cancelarEdicao = document.getElementById('cancelar-edicao');
+                let produtoIndexEdicao = null;
 
-            // Função para salvar os produtos
-            formulario.addEventListener('submit', function(e) {
-                e.preventDefault();
+                
+                /*CAMPOS DO POPUP A SER EDITADO*/
+                const editarNome = document.getElementById("editar-nome");
+                const editarPreco = document.getElementById("editar-preco");
+                const editarQuantidade = document.getElementById("editar-quantidade");
+                const editarFornecedor = document.getElementById("editar-fornecedor");
+                const editarCategoria = document.getElementById("editar-categoria");
+                const editarDescricao = document.getElementById("editar-descricao");
 
-                const nome = document.getElementById('nome').value.trim();
-                const preco = document.getElementById('preco').value.trim();
-                const quantidade = document.getElementById('quantidade').value.trim();
-                const fornecedor = document.getElementById('fornecedor').value.trim();
-                const categoria = document.getElementById('categoria').value.trim();
-                const descricao = document.getElementById('descricao').value.trim();
 
-                if (!nome || !preco || !quantidade || !fornecedor || categoria === "") {
+                // Função para salvar os produtos
+                formulario.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const produto = {
+                        nome: nome.value.trim(),
+                        preco: preco.value.trim(),
+                        quantidade: quantidade.value.trim(),
+                        fornecedor: fornecedor.value.trim(),
+                        categoria: categoria.value.trim(),
+                        descricao: descricao.value.trim()
+                    };
+
+
+                /*if (!nome || !preco || !quantidade || !fornecedor || categoria === "") {
                     alert("Por favor, preencha todos os campos obrigatórios!");
                     return;
-                }
+                }*/
 
-                const novoProduto = {nome, preco, quantidade, fornecedor, categoria, descricao};
+                //const novoProduto = {nome, preco, quantidade, fornecedor, categoria, descricao};
 
                 const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-                //modificou para ...(novoProduto)
-                //produtos.push(produto);
-                produtos.push(novoProduto);
+                produtos.push(produto);
                 localStorage.setItem("produtos", JSON.stringify(produtos));
 
                 formulario.reset();
@@ -150,7 +182,8 @@
 
                 if (produtos.length === 0) {
                     lista.innerHTML = "<p>Nenhum produto cadastrado.</p>";
-                } else {
+                    return; /*Adicionei este item após correções*/
+                } //else { Excluí o item else
                     // Cria uma tabela simples
                     let tabela = `
                     <table border="1" cellpadding="8" cellspacing="0">
@@ -162,44 +195,58 @@
                                 <th>Fornecedor</th>
                                 <th>Categoria</th>
                                 <th>Descrição</th>
-                                <th></th>
+                                <th>Editar</th>
+                                <th>Excluir</th>
                             </tr>
                         </thead>
                         <tbody>
                     `;
                                 
-                    produtos.forEach((produto, index) => {
+                    produtos.forEach((p, i) => {
                         tabela += `
                             <tr>
-                                <td>${produto.nome}</td>
-                                <td>${produto.preco}</td>
-                                <td>${produto.quantidade}</td>
-                                <td>${produto.fornecedor}</td>
-                                <td>${produto.categoria}</td>
-                                <td>${produto.descricao}</td>
-                                <td><button class="btn-excluir" data-index="${index}">Excluir</button></td>
+                                <td>${p.nome}</td>
+                                <td>${p.preco}</td>
+                                <td>${p.quantidade}</td>
+                                <td>${p.fornecedor}</td>
+                                <td>${p.categoria}</td>
+                                <td>${p.descricao}</td>
+                                <td>
+                                    <button class="btn-editar-tabela" data-index="${i}">Editar</button>
+                                </td>
+                                <td>
+                                    <button class="btn-excluir" data-index="${i}">Excluir</button>
+                                </td>
                             </tr>
                         `;
                     });
 
-                    tabela += `</tbody></table>`;
+                    tabela += "</tbody></table>";
                     lista.innerHTML = tabela;
 
                     // TODO - ADICIONAR OS EVENTOS PARA O BOTÃO EXCLUIR
                     document.querySelectorAll(".btn-excluir").forEach(botao => {
                         botao.addEventListener('click', function() {
+                            const index = this.getAttribute("data-index");
+                            excluirProduto(index);
+                        });
+                    });
+
+                    // TODO - ADICIONAR OS EVENTOS PARA O BOTÃO EDITAR
+                    document.querySelectorAll(".btn-editar-tabela").forEach(botao => {
+                        botao.addEventListener('click', function() {
                             const i = this.getAttribute("data-index");
-                            excluirProduto(i);
+                            abrirEdicao(i);
                         });
                     });
                 }
-            }
+            
 
             // FUNÇÃO PARA EXCLUIR OS PRODUTOS CADASTRADOS
-            function excluirProduto(index) {
+            function excluirProduto(i) {
                 const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
                 if (confirm("Deseja realmente excluir este produto?")) {
-                    produtos.splice(index, 1);
+                    produtos.splice(i, 1);
                     localStorage.setItem("produtos", JSON.stringify(produtos));
                     //Vai atualizar após a exclusão do item e depois exibi-la
                     exibirProdutos();
@@ -207,30 +254,64 @@
             }
 
 
-            // FECHAR O POPUP
-            fechar.addEventListener('click', function() {
-                popup.style.display = "none";
+            function abrirEdicao(i) {
+                const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+                const p = produtos[i];
+                produtoIndexEdicao = i;
 
+                document.getElementById("editar-nome").value = p.nome;
+                document.getElementById("editar-preco").value = p.preco;
+                document.getElementById("editar-quantidade").value = p.quantidade;
+                document.getElementById("editar-fornecedor").value = p.fornecedor;
+                document.getElementById("editar-categoria").value = p.categoria;
+                document.getElementById("editar-descricao").value = p.descricao;
+
+                /*editarNome.value = p.nome;
+                editarPreco.value = p.preco;
+                editarQuantidade = p.quantidade;
+                editarFornecedor = p.fornecedor;
+                editarCategoria = p.categoria;
+                editarDescricao = p.descricao;*/
+
+                popupEditar.style.display = "flex";
+            }
+
+            //SALVAR O FORMULÁRIO EDITADO
+            editarFormulario.addEventListener("submit", function(e) {
+                e.preventDefault();
+
+                if(!confirm("Deseja realmente salvar as alterações deste produto?")) {
+                    return;
+                }
+
+                const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+                produtos[produtoIndexEdicao] = {
+                    nome: editarNome.value.trim(),
+                    preco: editarPreco.value.trim(),
+                    quantidade: editarQuantidade.value.trim(),
+                    fornecedor: editarFornecedor.value.trim(),
+                    categoria: editarCategoria.value.trim(),
+                    descricao: editarDescricao.value.trim()
+                };
+
+
+                localStorage.setItem("produtos", JSON.stringify(produtos));
+                popupEditar.style.display = "none";
+                exibirProdutos();
+                alert("Produto atualizado com sucesso!");
+                
             });
-            
-            // VAI FECHAR O POPUP MESMO SE CLICAR FORA DELE
-            window.addEventListener('click', function(e) {
-                if (e.target === popup) {
-                    popup.style.display = "none";
-                }            
-            });
+
+
+            // FECHAR O POPUP
+            fechar.addEventListener('click', () => popup.style.display = "none");
+            fecharEditar.addEventListener('click', () => popupEditar.style.display = "none");
+            cancelarEdicao.addEventListener('click', () => popupEditar.style.display = "none");
 
             });
 
 
         </script>
-
-
-
-
-
-
-
     </main>
 </body>
 </html>
